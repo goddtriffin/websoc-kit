@@ -1,0 +1,8 @@
+# directories
+.idea/
+.vscode/
+target/
+
+# files
+.DS_Store
+Cargo.lock
