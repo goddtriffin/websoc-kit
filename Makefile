@@ -32,5 +32,5 @@ test: ## runs tests
 
 .PHONY: fix
 fix: ## auto-fixes (some) linter issues
-	cargo fix --allow-dirty
-	cargo clippy --fix --allow-dirty
+	cargo fix --allow-dirty --allow-staged
+	cargo clippy --fix --allow-dirty --allow-staged
