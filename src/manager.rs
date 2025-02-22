@@ -2,10 +2,10 @@ use std::{collections::HashMap, sync::Arc};
 
 use axum::extract::ws::{Message, WebSocket};
 use futures::{
-    stream::{SplitSink, SplitStream},
     SinkExt, StreamExt,
+    stream::{SplitSink, SplitStream},
 };
-use tokio::sync::{mpsc::Sender, RwLock, RwLockReadGuard, RwLockWriteGuard};
+use tokio::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard, mpsc::Sender};
 use tracing::{error, info, instrument, warn};
 
 use crate::{
@@ -66,7 +66,9 @@ impl WebsocKitManager {
             .remove(&connection_id)
             .is_none()
         {
-            error!("attempted to discard dead Connection, but none existed with the given ID: '{connection_id}'");
+            error!(
+                "attempted to discard dead Connection, but none existed with the given ID: '{connection_id}'"
+            );
             // TODO - should I return an error?
         }
         info!("websocket connection closed: '{connection_id}'");
@@ -203,7 +205,9 @@ impl WebsocKitManager {
                 connection_ids.push(*connection_id);
             }
         }
-        info!("found websockets subscribed to '{subscription}': {connection_ids:?} - sending payload: {payload:?}");
+        info!(
+            "found websockets subscribed to '{subscription}': {connection_ids:?} - sending payload: {payload:?}"
+        );
 
         // send the payload to all the subscribers
         self.send_payload(connection_ids, payload).await
@@ -237,7 +241,9 @@ impl WebsocKitManager {
             HashMap<ConnectionId, HashMap<Subscription, usize>>,
         > = self.subscriptions.write().await;
         let Some(subscriptions) = subscriptions_lock.get_mut(&connection_id) else {
-            error!("attempted to unsubscribe from '{subscription}', but websocket '{connection_id}' had zero subscriptions at all");
+            error!(
+                "attempted to unsubscribe from '{subscription}', but websocket '{connection_id}' had zero subscriptions at all"
+            );
             return;
         };
 
@@ -258,7 +264,9 @@ impl WebsocKitManager {
                 }
             }
         } else {
-            error!("attempted to unsubscribe from '{subscription}', but websocket '{connection_id}' was not subscribed to it");
+            error!(
+                "attempted to unsubscribe from '{subscription}', but websocket '{connection_id}' was not subscribed to it"
+            );
         }
     }
 
@@ -270,10 +278,15 @@ impl WebsocKitManager {
         > = self.subscriptions.write().await;
 
         // remove all subscriptions
-        if let Some(subscriptions) = subscriptions_lock.remove(&connection_id) {
-            info!("unsubscribed '{connection_id}' from all subscriptions: {subscriptions:?}");
-        } else {
-            error!("attempted to unsubscribe from all subscriptions, but websocket '{connection_id}' had zero subscriptions at all");
+        match subscriptions_lock.remove(&connection_id) {
+            Some(subscriptions) => {
+                info!("unsubscribed '{connection_id}' from all subscriptions: {subscriptions:?}");
+            }
+            _ => {
+                error!(
+                    "attempted to unsubscribe from all subscriptions, but websocket '{connection_id}' had zero subscriptions at all"
+                );
+            }
         }
     }
 
