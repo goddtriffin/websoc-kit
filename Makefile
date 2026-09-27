@@ -34,3 +34,8 @@ test: ## runs tests
 fix: ## auto-fixes (some) linter issues
 	cargo fix --allow-dirty --allow-staged
 	cargo clippy --fix --allow-dirty --allow-staged
+
+.PHONY: publish_dry_run
+publish_dry_run: ## dry run of publishing libraries to crates.io
+	cargo publish --package websoc-kit --dry-run
+	cargo package --package websoc-kit --list
