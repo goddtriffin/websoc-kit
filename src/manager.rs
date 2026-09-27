@@ -177,7 +177,7 @@ impl WebsocKitManager {
                     );
                     break;
                 }
-            };
+            }
         }
 
         Ok(())

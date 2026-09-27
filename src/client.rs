@@ -20,6 +20,10 @@ impl WebsocKitClient {
     /// # Errors
     ///
     /// TODO
+    #[expect(
+        clippy::result_large_err,
+        reason = "boxing tungstenite::Error in WebsocKitError is a breaking change"
+    )]
     pub async fn new(url: &str) -> WebsocKitResult<Self> {
         let (ws_stream, _) = connect_async(url).await?;
         info!("WebSocket handshake has been successfully completed");
@@ -35,6 +39,10 @@ impl WebsocKitClient {
     /// # Errors
     ///
     /// TODO
+    #[expect(
+        clippy::result_large_err,
+        reason = "boxing tungstenite::Error in WebsocKitError is a breaking change"
+    )]
     pub async fn send_message(&self, message: Vec<u8>) -> WebsocKitResult<()> {
         let mut writer = self.writer.lock().await;
         writer.send(Message::Binary(message)).await?;
@@ -44,6 +52,10 @@ impl WebsocKitClient {
     /// # Errors
     ///
     /// TODO
+    #[expect(
+        clippy::result_large_err,
+        reason = "boxing tungstenite::Error in WebsocKitError is a breaking change"
+    )]
     pub async fn read_message(&self) -> WebsocKitResult<Option<Vec<u8>>> {
         let mut reader = self.reader.lock().await;
         match reader.next().await {
