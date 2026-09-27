@@ -1,9 +1,13 @@
-[package]
-name = "websoc-kit"
+[workspace]
+members = ["websoc_kit"]
+resolver = "2"
+
+[workspace.package]
 version = "0.0.2"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Todd Everett Griffin <tgriffin115@gmail.com>"]
+readme = "README.md"
 repository = "https://github.com/goddtriffin/websoc-kit"
 homepage = "https://www.toddgriffin.me/"
 description = "A highly-opinionated Websocket tooling kit."
@@ -18,13 +22,10 @@ categories = [
 ]
 include = ["**/*.rs", "Cargo.toml", ".clippy.toml", "LICENSE", "README.md"]
 
-[lib]
-path = "src/lib.rs"
-
-[lints.rust]
+[workspace.lints.rust]
 unsafe_code = { level = "forbid", priority = 0 }
 
-[lints.clippy]
+[workspace.lints.clippy]
 multiple_crate_versions = { level = "allow", priority = 1 }
 nursery = { level = "allow", priority = 1 }
 all = { level = "deny", priority = -1 }
@@ -36,7 +37,7 @@ perf = { level = "deny", priority = -1 }
 pedantic = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }
 
-[dependencies]
+[workspace.dependencies]
 # tokio
 tokio = { version = "1.43.0", features = ["full", "tracing"] }
 
